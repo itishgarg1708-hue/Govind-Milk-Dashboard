@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Govind Milk | Flavoured Milk & Milkshake — Market Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" onerror="this.onerror=null;var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js';s.onerror=function(){var t=document.createElement('script');t.src='https://unpkg.com/chart.js@4.4.4/dist/chart.umd.min.js';document.head.appendChild(t);};document.head.appendChild(s);"></script>
+<style>
+/* ============================================================
+   GOVIND MILK — MARKET INTELLIGENCE DASHBOARD
+   Token system
+   ============================================================ */
+:root{
+  --navy: #0A1F3D;
+  --navy-deep: #061328;
+  --navy-soft: #11294D;
+  --sky: #2E9FE0;
+  --sky-soft: #E7F4FC;
+  --emerald: #11A672;
+  --emerald-soft: #E5F7F0;
+  --amber: #E8A23B;
+  --amber-soft: #FCF1DF;
+  --red: #D5635A;
+  --red-soft: #FBEAE8;
+  --grey-900: #1B2430;
+  --grey-700: #4B5768;
+  --grey-500: #828FA0;
+  --grey-300: #D6DCE5;
+  --grey-150: #EEF1F5;
+  --grey-100: #F6F8FA;
+  --white: #FFFFFF;
+
+  --bg: var(--grey-100);
+  --surface: var(--white);
+  --surface-2: var(--grey-100);
+  --text-primary: var(--grey-900);
+  --text-secondary: var(--grey-700);
+  --text-muted: var(--grey-500);
+  --border: var(--grey-300);
+  --border-soft: var(--grey-150);
+  --header-bg: rgba(255,255,255,0.86);
+  --shadow-sm: 0 1px 2px rgba(10,31,61,0.06), 0 1px 1px rgba(10,31,61,0.04);
+  --shadow-md: 0 6px 20px rgba(10,31,61,0.08);
+  --shadow-lg: 0 18px 48px rgba(10,31,61,0.14);
+  --accent-grad: linear-gradient(135deg, var(--navy) 0%, #143A6B 55%, var(--sky) 130%);
+  --font-display: 'Sora', 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+[data-theme="dark"]{
+  --bg: #070F1F;
+  --surface: #0E1B33;
+  --surface-2: #0B1729;
+  --text-primary: #EDF2F9;
+  --text-secondary: #AEBBCF;
+  --text-muted: #7C8AA3;
+  --border: #1E2D4A;
+  --border-soft: #16233C;
+  --header-bg: rgba(7,15,31,0.82);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 6px 24px rgba(0,0,0,0.35);
+  --shadow-lg: 0 20px 50px rgba(0,0,0,0.45);
+  --grey-150: #16233C;
+  --sky-soft: #11243F;
+  --emerald-soft: #0E2A23;
+  --amber-soft: #2C2210;
+  --red-soft: #2C1715;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing:antialiased;
+  transition: background .35s ease, color .35s ease;
+  overflow-x:hidden;
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+}
+h1,h2,h3,h4{font-family:var(--font-display); letter-spacing:-0.02em; color:var(--text-primary);}
+a{color:inherit;text-decoration:none;}
+:focus-visible{outline:2px solid var(--sky); outline-offset:2px; border-radius:4px;}
+.container{max-width:1360px; margin:0 auto; padding:0 32px;}
+.mono{font-family:var(--font-mono);}
+
+::-webkit-scrollbar{width:10px; height:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--grey-300); border-radius:8px;}
+[data-theme="dark"] ::-webkit-scrollbar-thumb{background:#243758;}
+
+/* ---------------- NAVBAR ---------------- */
+.navbar{
+  position:sticky; top:0; z-index:200;
+  background:var(--header-bg);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border-soft);
+  transition: background .35s ease, border-color .35s ease;
+}
+.scroll-progress{ position:fixed; top:0; left:0; height:3px; width:0%; background:linear-gradient(90deg, var(--sky), var(--emerald)); z-index:300; transition:width .1s linear; }
+.navbar-inner{
+  max-width:1360px; margin:0 auto; padding:0 32px;
+  height:68px; display:flex; align-items:center; justify-content:space-between; gap:24px;
+}
+.brand{display:flex; align-items:center; gap:11px;}
+.brand-mark{
+  width:38px;height:38px;border-radius:9px;
+  background:var(--accent-grad);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff; font-family:var(--font-display); font-weight:800; font-size:15px;
+  box-shadow: var(--shadow-sm);
+  flex-shrink:0;
+}
+.brand-text{display:flex; flex-direction:column; line-height:1.15;}
+.brand-text strong{font-family:var(--font-display); font-size:15.5px; font-weight:700;}
+.brand-text span{font-size:10.5px; color:var(--text-muted); letter-spacing:.06em; text-transform:uppercase; font-weight:600;}
+
+.navlinks{display:flex; align-items:center; gap:2px; flex:1; justify-content:center; overflow-x:auto; scrollbar-width:none;}
+.navlinks::-webkit-scrollbar{display:none;}
+.navlinks button{
+  background:none;border:none;cursor:pointer;
+  font-family:var(--font-body); font-size:13.2px; font-weight:600;
+  color:var(--text-secondary); padding:9px 13px; border-radius:8px;
+  white-space:nowrap; transition: all .2s ease;
+}
+.navlinks button:hover{ color:var(--navy); background:var(--sky-soft); }
+[data-theme="dark"] .navlinks button:hover{ color:var(--sky); }
+.navlinks button.active{ color:var(--white); background:var(--navy); }
+
+.nav-actions{display:flex; align-items:center; gap:10px;}
+.theme-toggle{
+  width:42px; height:42px; border-radius:50%; border:1px solid var(--border);
+  background:var(--surface); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all .25s ease; flex-shrink:0;
+}
+.theme-toggle:hover{ border-color:var(--sky); transform: rotate(20deg) scale(1.05); }
+.theme-toggle svg{width:19px;height:19px;}
+
+/* ---------------- INSIGHT TICKER ---------------- */
+.ticker{
+  background:var(--navy-deep); color:#CFE7F9; overflow:hidden; white-space:nowrap;
+  border-bottom:1px solid rgba(255,255,255,0.08); position:relative; z-index:150;
+}
+.ticker-track{ display:inline-flex; align-items:center; gap:0; animation: tickerScroll 42s linear infinite; padding:9px 0; }
+.ticker:hover .ticker-track{ animation-play-state:paused; }
+.ticker-item{ display:inline-flex; align-items:center; gap:9px; padding:0 30px; font-size:12.5px; font-weight:500; }
+.ticker-item .dot{ width:5px; height:5px; border-radius:50%; background:var(--amber); flex-shrink:0; }
+.ticker-item b{ color:#fff; font-weight:700; }
+@keyframes tickerScroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+@media (prefers-reduced-motion: reduce){ .ticker-track{ animation:none; } }
+
+/* ---------------- HERO ---------------- */
+.hero{
+  position:relative; overflow:hidden;
+  background: var(--accent-grad);
+  color:#fff; padding:84px 0 0;
+}
+.hero::before{
+  content:''; position:absolute; inset:0;
+  background-image:
+    radial-gradient(circle at 14% 22%, rgba(46,159,224,0.35), transparent 42%),
+    radial-gradient(circle at 88% 12%, rgba(17,166,114,0.28), transparent 38%),
+    radial-gradient(circle at 70% 90%, rgba(232,162,59,0.18), transparent 45%);
+  pointer-events:none;
+}
+.hero-grid-lines{
+  position:absolute; inset:0; opacity:.12; pointer-events:none;
+  background-image: linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+.hero-viz{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+.hero-bubble{
+  position:absolute; border-radius:50%; border:1.5px solid rgba(255,255,255,0.35);
+  background:radial-gradient(circle at 32% 28%, rgba(255,255,255,0.28), rgba(255,255,255,0.03) 70%);
+  animation: driftBubble ease-in-out infinite;
+  backdrop-filter: blur(1px);
+}
+@keyframes driftBubble{
+  0%,100%{ transform:translateY(0) translateX(0); }
+  50%{ transform:translateY(-16px) translateX(8px); }
+}
+.hero-scroll-cue{
+  position:absolute; bottom:18px; left:50%; transform:translateX(-50%); z-index:2;
+  display:flex; flex-direction:column; align-items:center; gap:6px; opacity:.55;
+  font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:#fff; font-weight:600;
+  animation: fadeUp 1s ease .9s both;
+}
+.hero-scroll-cue .chev{ width:14px; height:14px; border-right:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(45deg); animation: bounceChev 1.8s ease-in-out infinite; }
+@keyframes bounceChev{ 0%,100%{ transform:rotate(45deg) translate(0,0); } 50%{ transform:rotate(45deg) translate(3px,3px); } }
+.hero-inner{position:relative; z-index:2; max-width:1360px; margin:0 auto; padding:0 32px;}
+.hero-eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:12.5px; font-weight:700; letter-spacing:.10em; text-transform:uppercase;
+  color:#CFE7F9; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
+  padding:7px 14px; border-radius:30px; opacity:0; animation: fadeUp .7s ease forwards;
+}
+.hero-eyebrow .dot{width:7px;height:7px;border-radius:50%; background:var(--emerald); box-shadow:0 0 0 4px rgba(17,166,114,.25);}
+.hero h1{
+  font-size:clamp(34px, 5vw, 58px); font-weight:800; line-height:1.04; margin-top:22px; max-width:880px;
+  color:#fff;
+  opacity:0; animation: fadeUp .8s ease .08s forwards;
+}
+.hero h1 em{font-style:normal; color:var(--amber);}
+.hero p.lead{
+  margin-top:20px; max-width:620px; font-size:16.5px; line-height:1.65; color:#C9D7EA; font-weight:400;
+  opacity:0; animation: fadeUp .8s ease .16s forwards;
+}
+.hero-cta{margin-top:30px; display:flex; gap:14px; flex-wrap:wrap; opacity:0; animation: fadeUp .8s ease .24s forwards;}
+.btn{
+  font-family:var(--font-body); font-weight:600; font-size:14px; padding:13px 24px; border-radius:10px;
+  cursor:pointer; border:none; transition:all .25s ease; display:inline-flex; align-items:center; gap:8px;
+}
+.btn-primary{ background:#fff; color:var(--navy); box-shadow:var(--shadow-md); }
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 16px 30px rgba(0,0,0,0.25); }
+.btn-ghost{ background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.28); }
+.btn-ghost:hover{ background:rgba(255,255,255,0.16); }
+
+.hero-stats{
+  position:relative; z-index:2; margin-top:56px;
+  max-width:1360px; margin-left:auto; margin-right:auto; padding:0 32px;
+  display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid rgba(255,255,255,0.14);
+  opacity:0; animation: fadeUp .9s ease .32s forwards; box-sizing:border-box;
+}
+.hero-stat{ padding:24px 28px; border-right:1px solid rgba(255,255,255,0.14); }
+.hero-stat:last-child{border-right:none;}
+.hero-stat .v{font-family:var(--font-mono); font-size:25px; font-weight:600; color:#fff;}
+.hero-stat .l{font-size:12px; color:#9FB3CC; margin-top:5px; font-weight:500;}
+
+@keyframes fadeUp{ from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);} }
+
+/* ---------------- SECTION SCAFFOLDING ---------------- */
+section{ padding:72px 0; scroll-margin-top:80px; }
+.section-head{ margin-bottom:34px; max-width:760px; }
+.section-eyebrow{
+  font-size:11.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--sky);
+  display:flex; align-items:center; gap:8px; margin-bottom:10px;
+}
+.section-eyebrow::before{content:''; width:22px; height:2px; background:var(--sky); border-radius:2px;}
+.section-head h2{ font-size:clamp(24px,3vw,32px); font-weight:700; }
+.section-head p{ margin-top:10px; font-size:15px; color:var(--text-secondary); line-height:1.65; }
+
+.alt-bg{ background:var(--surface-2); border-top:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft); }
+
+/* ---------------- KPI CARDS ---------------- */
+.kpi-grid{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:18px;
+  margin-top:-18px; position:relative; z-index:5;
+}
+.kpi-card{
+  background:var(--surface); border:1px solid var(--border-soft); border-radius:16px; padding:22px 22px 20px;
+  box-shadow:var(--shadow-md); transition: transform .25s ease, box-shadow .25s ease;
+  display:flex; flex-direction:column; gap:10px; position:relative; overflow:hidden;
+}
+.kpi-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-lg); border-color:var(--sky); }
+.kpi-value{ transition: color .2s ease; }
+.kpi-card:hover .kpi-value{ color:var(--navy); }
+[data-theme="dark"] .kpi-card:hover .kpi-value{ color:var(--sky); }
+.kpi-card .icon-badge{
+  width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.kpi-card .icon-badge svg{width:19px;height:19px;}
+.kpi-top{display:flex; align-items:flex-start; justify-content:space-between;}
+.kpi-label{font-size:12.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em;}
+.kpi-value{font-family:var(--font-mono); font-size:27px; font-weight:600; color:var(--text-primary); line-height:1.1;}
+.kpi-sub{font-size:12.5px; color:var(--text-secondary); line-height:1.5;}
+.kpi-tag{ font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; display:inline-flex; width:fit-content;}
+.tag-emerald{ background:var(--emerald-soft); color:var(--emerald); }
+.tag-amber{ background:var(--amber-soft); color:#9A6712; }
+[data-theme="dark"] .tag-amber{ color:var(--amber); }
+.tag-sky{ background:var(--sky-soft); color:#1B6FA3; }
+[data-theme="dark"] .tag-sky{ color:var(--sky); }
+.tag-red{ background:var(--red-soft); color:var(--red); }
+.bg-navy{background:var(--navy);} .bg-sky{background:var(--sky);} .bg-emerald{background:var(--emerald);}
+.bg-amber{background:var(--amber);} .bg-red{background:var(--red);} .bg-grey{background:var(--grey-700);}
+
+/* ---------------- TABLE ---------------- */
+.table-toolbar{
+  display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between;
+  margin-bottom:16px; background:var(--surface); border:1px solid var(--border-soft); border-radius:14px; padding:14px 16px;
+  box-shadow:var(--shadow-sm);
+}
+.search-wrap{ position:relative; flex:1; min-width:220px; max-width:340px; }
+.search-wrap svg{ position:absolute; left:13px; top:50%; transform:translateY(-50%); width:16px;height:16px; color:var(--text-muted); }
+.search-wrap input{
+  width:100%; padding:10px 14px 10px 38px; border-radius:9px; border:1px solid var(--border);
+  background:var(--surface-2); color:var(--text-primary); font-size:13.5px; font-family:var(--font-body);
+}
+.search-wrap input:focus{ border-color:var(--sky); }
+.filter-group{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.filter-group select{
+  padding:9px 12px; border-radius:9px; border:1px solid var(--border); background:var(--surface-2);
+  color:var(--text-primary); font-size:13px; font-family:var(--font-body); cursor:pointer;
+}
+.table-meta{ font-size:12.5px; color:var(--text-muted); font-weight:500; white-space:nowrap; }
+
+.table-scroll{
+  background:var(--surface); border:1px solid var(--border-soft); border-radius:14px; overflow:auto;
+  max-height:620px; box-shadow:var(--shadow-sm);
+}
+table{ width:100%; border-collapse:collapse; font-size:13px; min-width:1180px; }
+thead th{
+  position:sticky; top:0; z-index:3; background:var(--navy); color:#fff;
+  text-align:left; padding:13px 14px; font-weight:600; font-size:11.8px; letter-spacing:.03em; text-transform:uppercase;
+  cursor:pointer; user-select:none; white-space:nowrap;
+}
+thead th:hover{ background:var(--navy-soft); }
+thead th .sort-arrow{ font-size:9px; margin-left:5px; opacity:.6; }
+tbody td{ padding:12px 14px; border-bottom:1px solid var(--border-soft); white-space:nowrap; color:var(--text-secondary); }
+tbody tr{ transition: background .15s ease; }
+tbody tr:hover{ background:var(--sky-soft); }
+tbody td.strong{ color:var(--text-primary); font-weight:600; }
+.cell-pill{ font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; display:inline-block;}
+.seg-Value{ background:var(--emerald-soft); color:var(--emerald); }
+.seg-Mid-Market{ background:var(--sky-soft); color:#1B6FA3; }
+[data-theme="dark"] .seg-Mid-Market{ color:var(--sky); }
+.seg-Premium{ background:var(--amber-soft); color:#9A6712; }
+[data-theme="dark"] .seg-Premium{ color:var(--amber); }
+.seg-Super-Premium{ background:var(--red-soft); color:var(--red); }
+.plat-yes{ color:var(--emerald); font-weight:700; }
+.plat-no{ color:var(--grey-300); }
+[data-theme="dark"] .plat-no{ color:#2A3A57; }
+.rating-cell{ display:flex; align-items:center; gap:5px; font-weight:600; color:var(--text-primary); }
+.rating-cell svg{ width:13px;height:13px; color:var(--amber); }
+.no-rating{ color:var(--text-muted); font-style:italic; font-weight:400; font-size:12px; }
+
+/* ---------------- CHART CARDS ---------------- */
+.chart-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; }
+.chart-grid.three{ grid-template-columns:repeat(3,1fr); }
+.chart-card{
+  background:var(--surface); border:1px solid var(--border-soft); border-radius:16px; padding:22px;
+  box-shadow:var(--shadow-sm); transition: box-shadow .25s ease, transform .25s ease;
+}
+.chart-card:hover{ box-shadow:var(--shadow-md); }
+.chart-card.span2{ grid-column:span 2; }
+.chart-card-head{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px; }
+.chart-card-head h3{ font-size:15.5px; font-weight:700; }
+.chart-card-head p{ font-size:12.5px; color:var(--text-muted); margin-top:3px; max-width:480px; line-height:1.5;}
+.chart-badge{ font-size:10.5px; font-weight:700; color:var(--text-muted); background:var(--surface-2); padding:4px 10px; border-radius:20px; border:1px solid var(--border-soft); white-space:nowrap;}
+.chart-canvas-wrap{ position:relative; height:300px; margin-top:14px; }
+.chart-canvas-wrap.tall{ height:360px; }
+.chart-insight{
+  margin-top:14px; padding:11px 13px; border-radius:10px; background:var(--surface-2); border-left:3px solid var(--sky);
+  font-size:12.5px; color:var(--text-secondary); line-height:1.55;
+}
+
+/* ---------------- PLATFORM HEATMAP ---------------- */
+.heatmap-wrap{ overflow-x:auto; }
+.heatmap{ border-collapse:collapse; width:100%; min-width:640px; font-size:13px; }
+.heatmap th{ padding:10px; text-align:center; font-size:11.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em; }
+.heatmap th:first-child{ text-align:left; }
+.heatmap td{ padding:9px; text-align:center; border-bottom:1px solid var(--border-soft); }
+.heatmap td:first-child{ text-align:left; font-weight:600; color:var(--text-primary); }
+.hm-dot{ width:26px; height:26px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; }
+.hm-yes{ background:var(--emerald); color:#fff; }
+.hm-no{ background:var(--grey-150); color:var(--text-muted); }
+
+/* ---------------- INSIGHTS ---------------- */
+.insight-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; }
+.insight-card{
+  background:var(--surface); border:1px solid var(--border-soft); border-radius:16px; padding:24px;
+  box-shadow:var(--shadow-sm); transition:all .25s ease; position:relative; overflow:hidden;
+}
+.insight-card:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); }
+.insight-card .bar{ width:34px; height:4px; border-radius:3px; margin-bottom:16px; }
+.insight-card h4{ font-size:15.5px; font-weight:700; margin-bottom:9px; }
+.insight-card p{ font-size:13px; color:var(--text-secondary); line-height:1.65; }
+.insight-card .tag{ margin-top:14px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-muted); }
+
+/* ---------------- OPPORTUNITY MATRIX ---------------- */
+.matrix-wrap{
+  background:var(--surface); border:1px solid var(--border-soft); border-radius:18px; padding:30px;
+  box-shadow:var(--shadow-sm);
+}
+.matrix-grid{
+  display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:2px;
+  background:var(--border); border-radius:14px; overflow:hidden; min-height:560px; position:relative; border:1px solid var(--border);
+}
+.matrix-quad{ background:var(--surface); padding:20px; position:relative; display:flex; flex-direction:column; }
+.matrix-quad .quad-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:14px; display:flex; align-items:center; gap:7px;}
+.matrix-quad .quad-label .sw{width:9px;height:9px;border-radius:3px;}
+.quad-items{ display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1; }
+.quad-item{
+  background:var(--surface-2); border:1px solid var(--border-soft); border-radius:10px; padding:11px 13px;
+  font-size:12.5px; line-height:1.5; cursor:default; transition:all .2s ease; border-left:3px solid transparent;
+}
+.quad-item:hover{ transform:translateX(3px); box-shadow:var(--shadow-sm); }
+.quad-item strong{ display:block; font-size:12.8px; color:var(--text-primary); margin-bottom:3px; font-weight:700;}
+.matrix-axis-label{ position:absolute; font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.06em; }
+.matrix-axis-x{ bottom:-26px; left:50%; transform:translateX(-50%); }
+.matrix-axis-y{ top:50%; left:-34px; transform:translateY(-50%) rotate(-90deg); }
+.matrix-center-divider-h{ position:absolute; top:50%; left:0; right:0; height:1px; }
+.matrix-legend{ display:flex; gap:18px; flex-wrap:wrap; margin-top:34px; padding-top:18px; border-top:1px solid var(--border-soft); }
+.matrix-legend-item{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-secondary); font-weight:500;}
+.matrix-legend-item .sw{ width:10px;height:10px;border-radius:3px; }
+
+/* ---------------- FOOTER ---------------- */
+footer{ background:var(--navy-deep); color:#AEBBCF; padding:54px 0 26px; margin-top:40px; }
+.footer-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:36px; padding-bottom:36px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.footer-brand .brand-mark{ margin-bottom:14px; }
+.footer-brand p{ font-size:13px; line-height:1.7; max-width:280px; color:#8DA0BD; }
+.footer-col h5{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#fff; margin-bottom:14px; }
+.footer-col a, .footer-col div{ display:block; font-size:13px; color:#8DA0BD; margin-bottom:10px; }
+.footer-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:24px; flex-wrap:wrap; gap:10px; font-size:12px; color:#69799A; }
+
+/* ---------------- BACK TO TOP ---------------- */
+.back-top{
+  position:fixed; bottom:26px; right:26px; width:46px; height:46px; border-radius:50%;
+  background:var(--navy); color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--shadow-lg); opacity:0; pointer-events:none; transition:all .3s ease; z-index:150;
+}
+.back-top.show{ opacity:1; pointer-events:auto; }
+.back-top:hover{ transform:translateY(-3px); }
+
+/* ---------------- TOOLTIP (custom for matrix/chips) ---------------- */
+[data-tip]{ position:relative; }
+
+/* ---------------- ANIMATIONS ON SCROLL ---------------- */
+.reveal{ opacity:0; transform:translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in{ opacity:1; transform:translateY(0); }
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 1080px){
+  .kpi-grid{ grid-template-columns:repeat(2,1fr); }
+  .chart-grid, .chart-grid.three{ grid-template-columns:1fr; }
+  .chart-card.span2{ grid-column:span 1; }
+  .insight-grid{ grid-template-columns:repeat(2,1fr); }
+  .footer-grid{ grid-template-columns:1fr 1fr; }
+  .hero-stats{ grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width: 760px){
+  .container{ padding:0 18px; }
+  .hero-inner{ padding:0 18px; }
+  .navlinks{ display:none; }
+  .kpi-grid{ grid-template-columns:1fr; margin-top:-12px; }
+  .insight-grid{ grid-template-columns:1fr; }
+  .footer-grid{ grid-template-columns:1fr; gap:28px; }
+  .hero{ padding-top:96px; }
+  .hero-stats{ grid-template-columns:1fr 1fr; }
+  .matrix-grid{ grid-template-columns:1fr; grid-template-rows:repeat(4,auto); min-height:auto; }
+  section{ padding:50px 0; }
+  table{ min-width:980px; }
+}
+</style>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============== NAVBAR ============== -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <div class="brand">
+      <div class="brand-mark">GM</div>
+      <div class="brand-text">
+        <strong>Govind Milk</strong>
+        <span>Market Intelligence</span>
+      </div>
+    </div>
+    <div class="navlinks" id="navlinks">
+      <button data-target="#overview" class="active">Overview</button>
+      <button data-target="#competitors">Competitors</button>
+      <button data-target="#pricing">Pricing</button>
+      <button data-target="#portfolio">Portfolio</button>
+      <button data-target="#nutrition">Nutrition</button>
+      <button data-target="#customer">Customer</button>
+      <button data-target="#platform">Platform</button>
+      <button data-target="#brand">Brand Comp.</button>
+      <button data-target="#insights">Insights</button>
+      <button data-target="#matrix">Opportunity</button>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+        <svg id="themeIconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="ticker">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- ============== HERO ============== -->
+<header class="hero" id="overview">
+  <div class="hero-grid-lines"></div>
+  <div class="hero-viz" id="heroViz"></div>
+  <div class="hero-inner">
+    <span class="hero-eyebrow"><span class="dot"></span>Category Deep-Dive · Flavoured Milk &amp; Milkshakes</span>
+    <h1>Reading the shelf before Govind <em>writes</em> its next move.</h1>
+    <p class="lead">A ground-up analysis of 15 competing SKUs across 10 brands in the Flavoured Milk &amp; Milkshake aisle — pricing ladders, nutrition trade-offs, quick-commerce reach, and customer sentiment, distilled into one operating view for Govind Milk's category team.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" onclick="document.getElementById('competitors').scrollIntoView({behavior:'smooth'})">Explore Competitor Data →</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('matrix').scrollIntoView({behavior:'smooth'})">View Opportunity Matrix</button>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="v">10</div><div class="l">Competing Brands Tracked</div></div>
+    <div class="hero-stat"><div class="v">15</div><div class="l">SKUs Benchmarked</div></div>
+    <div class="hero-stat"><div class="v">₹18 – ₹141</div><div class="l">Selling Price Range</div></div>
+    <div class="hero-stat"><div class="v">4</div><div class="l">Sales Channels Mapped</div></div>
+  </div>
+  <div class="hero-scroll-cue"><span>Scroll to explore</span><span class="chev"></span></div>
+</header>
+
+<!-- ============== KPI SECTION ============== -->
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="kpi-grid" id="kpiGrid"></div>
+  </div>
+</section>
+
+<!-- ============== COMPETITOR TABLE ============== -->
+<section id="competitors" class="alt-bg">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Raw Intelligence</div>
+      <h2>Competitor &amp; Product Table</h2>
+      <p>Every tracked SKU, fully searchable and filterable. Sort any column — click a header twice to reverse order. Scroll the table body; the header stays put.</p>
+    </div>
+
+    <div class="table-toolbar reveal">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="tableSearch" placeholder="Search brand, product, USP, ingredient…">
+      </div>
+      <div class="filter-group">
+        <select id="filterBrand"><option value="">All Brands</option></select>
+        <select id="filterCategory"><option value="">All Categories</option></select>
+        <select id="filterSegment"><option value="">All Segments</option></select>
+        <select id="filterPlatform">
+          <option value="">All Platforms</option>
+          <option value="blinkit">Blinkit Listed</option>
+          <option value="zepto">Zepto Listed</option>
+          <option value="amazon">Amazon Listed</option>
+          <option value="official">Official Site Listed</option>
+        </select>
+      </div>
+      <div class="table-meta" id="tableMeta">15 of 15 products</div>
+    </div>
+
+    <div class="table-scroll reveal">
+      <table id="productTable">
+        <thead>
+          <tr>
+            <th data-key="brand">Brand <span class="sort-arrow"></span></th>
+            <th data-key="product">Product &amp; Flavour <span class="sort-arrow"></span></th>
+            <th data-key="category">Category <span class="sort-arrow"></span></th>
+            <th data-key="pack">Pack (ml) <span class="sort-arrow"></span></th>
+            <th data-key="price">Price (₹) <span class="sort-arrow"></span></th>
+            <th data-key="price100">₹/100ml <span class="sort-arrow"></span></th>
+            <th data-key="segment">Segment <span class="sort-arrow"></span></th>
+            <th data-key="calories">Cal (kcal) <span class="sort-arrow"></span></th>
+            <th data-key="protein">Protein (g) <span class="sort-arrow"></span></th>
+            <th data-key="sugar">Sugar (g) <span class="sort-arrow"></span></th>
+            <th data-key="rating">Rating <span class="sort-arrow"></span></th>
+            <th data-key="blinkit">Blinkit</th>
+            <th data-key="zepto">Zepto</th>
+            <th data-key="amazon">Amazon</th>
+            <th data-key="official">Official</th>
+          </tr>
+        </thead>
+        <tbody id="productTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PRICING INTELLIGENCE ============== -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Pricing Intelligence</div>
+      <h2>Where every SKU sits on the price ladder</h2>
+      <p>Selling price, per-100ml value, and value-segment positioning across the category — the foundation for any Govind pricing decision.</p>
+    </div>
+    <div class="chart-grid reveal">
+      <div class="chart-card span2">
+        <div class="chart-card-head">
+          <div><h3>Price vs. Price-per-100ml by Segment</h3><p>Bubble size = pack size (ml). Each bubble is one SKU, coloured by value segment.</p></div>
+          <span class="chart-badge">15 SKUs</span>
+        </div>
+        <div class="chart-canvas-wrap tall"><canvas id="chartPriceScatter"></canvas></div>
+        <div class="chart-insight">Epigamia's Protein Shakes sit far outside the rest of the field at ₹56.4/100ml — over 2.6× the next-highest SKU — while Value-tier products from Verka and Smoodh anchor the bottom at ₹11–12/100ml.</div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-head"><div><h3>Average Price by Segment</h3><p>Mean selling price (₹) per value tier.</p></div></div>
+        <div class="chart-canvas-wrap"><canvas id="chartAvgPriceSegment"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-head"><div><h3>Avg ₹/100ml by Segment</h3><p>Normalised value-for-money by tier.</p></div></div>
+        <div class="chart-canvas-wrap"><canvas id="chartAvgP100Segment"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PRODUCT PORTFOLIO ============== -->
+<section id="portfolio" class="alt-bg">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Product Portfolio</div>
+      <h2>How the category is built</h2>
+      <p>Category mix, value-segment spread, and packaging formats in play across the 15 tracked SKUs.</p>
+    </div>
+    <div class="chart-grid three reveal">
+      <div class="chart-card">
+        <div class="chart-card-head"><div><h3>Category Mix</h3><p>Share of SKUs by product type.</p></div></div>
+        <div class="chart-canvas-wrap"><canvas id="chartCategoryMix"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-head"><div><h3>Value Segment Mix</h3><p>Share of SKUs by price tier.</p></div></div>
+        <div class="chart-canvas-wrap"><canvas id="chartSegmentMix"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-head"><div><h3>Packaging Formats</h3><p>Format choice across competitors.</p></div></div>
+        <div class="chart-canvas-wrap"><canvas id="chartPackagingMix"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-insight reveal" style="margin-top:18px;">Mid-Market is the most crowded tier (8 of 15 SKUs), Flavoured Milk is the largest category (7 SKUs) but Milkshake carries the highest average sugar load — both signal where differentiation, not just participation, will decide share.</div>
+  </div>
+</section>
+
+<!-- ============== NUTRITION ANALYSIS ============== -->
+<section id="nutrition">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Nutrition Analysis</div>
+      <h2>Macro trade-offs across the category</h2>
+      <p>Calories, protein, sugar and fat profiles — and where each category sits on the indulgence-to-functional spectrum.</p>
+    </div>
+    <div class="chart-grid reveal">
+      <div class="chart-card span2">
+        <div class="chart-card-head">
+          <div><h3>Protein vs. Sugar — every SKU</h3><p>Bubble size = calories. Top-left is the "better-for-you" zone.</p></div>
+          <span class="chart-badge">g per pack</span>
+        </div>
+        <div class="chart-canvas-wrap tall"><canvas id="chartProteinSugar"></canvas></div>
+        <div class="chart-insight">Epigamia's two Protein Shakes are the only SKUs combining double-digit protein (20g) with sub-10g sugar — every Flavoured Milk and Milkshake SKU sits below 5g protein and above 14g sugar, leaving a clear mid-protein, moderate-sugar white space nobody has filled.</div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-head"><div><h3>Avg Macros by Category</h3><p>Calories, protein &amp; sugar, averaged per category.</p></div></div>
+        <div class="chart-canvas-wrap"><canvas id="chartMacrosByCategory"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CUSTOMER INSIGHTS ============== -->
+<section id="customer" class="alt-bg">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Customer Insights</div>
+      <h2>What shoppers are rating highest</h2>
+      <p>Ratings, review-trend direction, and value-for-money perception across rated SKUs (13 of 15; 2 new entrants are not yet rated).</p>
+    </div>
+    <div class="chart-grid reveal">
+      <div class="chart-card">
+        <div class="chart-card-head"><div><h3>Rating by Brand</h3><p>Average customer rating per brand.</p></div></div>
+        <div class="chart-canvas-wrap tall"><canvas id="chartRatingBrand"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-head"><div><h3>Price vs. Rating</h3><p>Does paying more earn a better score? Bubble = ₹/100ml.</p></div></div>
+        <div class="chart-canvas-wrap tall"><canvas id="chartPriceRating"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-insight reveal" style="margin-top:18px;">Nescafé's RTD Cappuccino leads all rated SKUs at 4.3 despite a mid-pack price, and review-trend notes mark it "Rising" — the strongest signal in the dataset that RTD coffee-milk is gaining traction fastest. Epigamia's two Protein Shakes are priced highest but rated lowest (3.4–3.7) and trending "Declining"/"Flat," suggesting price is outrunning perceived value there.</div>
+  </div>
+</section>
+
+<!-- ============== PLATFORM AVAILABILITY ============== -->
+<section id="platform">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Platform Availability</div>
+      <h2>Distribution reach, channel by channel</h2>
+      <p>Where each competitor is actually buyable today — quick-commerce, marketplace, and direct-to-consumer.</p>
+    </div>
+    <div class="chart-grid reveal">
+      <div class="chart-card">
+        <div class="chart-card-head"><div><h3>Platform Coverage</h3><p>Share of SKUs listed on each channel.</p></div></div>
+        <div class="chart-canvas-wrap"><canvas id="chartPlatformCoverage"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-head"><div><h3>Brand × Platform Matrix</h3><p>Listing status per brand, per channel.</p></div></div>
+        <div class="heatmap-wrap" style="margin-top:8px;">
+          <table class="heatmap" id="heatmapTable"></table>
+        </div>
+      </div>
+    </div>
+    <div class="chart-insight reveal" style="margin-top:18px;">Blinkit has 100% coverage (15/15 SKUs) and is the de-facto baseline channel; Zepto trails at 80%, Amazon at 67%, and Official Sites at 60% — Verka, Smoodh, and Heritage each skip 2 of the 4 channels, leaving visible distribution gaps for challenger brands to close.</div>
+  </div>
+</section>
+
+<!-- ============== BRAND COMPARISON ============== -->
+<section id="brand" class="alt-bg">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Brand Comparison</div>
+      <h2>Head-to-head positioning</h2>
+      <p>A normalised view of how the leading brands trade off price, rating, protein and calories — pick brands to compare.</p>
+    </div>
+    <div class="chart-grid reveal">
+      <div class="chart-card span2">
+        <div class="chart-card-head">
+          <div><h3>Brand Radar — Price · Rating · Protein · Calories</h3><p>Values normalised 0–100 against the category range (higher = stronger on that axis; for price &amp; calories, "stronger" means lower).</p></div>
+          <span class="chart-badge">Top 6 by SKU count / rating</span>
+        </div>
+        <div class="chart-canvas-wrap tall"><canvas id="chartBrandRadar"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-head"><div><h3>SKUs per Brand</h3><p>Portfolio depth in this category.</p></div></div>
+        <div class="chart-canvas-wrap tall"><canvas id="chartSkuPerBrand"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== STRATEGIC INSIGHTS ============== -->
+<section id="insights">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Strategic Insights</div>
+      <h2>What the data is telling Govind Milk</h2>
+      <p>Eight observations drawn directly from the pricing, nutrition, distribution and ratings data above — each one a starting point for category strategy.</p>
+    </div>
+    <div class="insight-grid reveal" id="insightGrid"></div>
+  </div>
+</section>
+
+<!-- ============== GOVIND OPPORTUNITY MATRIX ============== -->
+<section id="matrix" class="alt-bg">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Govind Opportunity Matrix</div>
+      <h2>Where to play, and how hard to push</h2>
+      <p>Every opportunity below is drawn from a specific competitor data point — plotted by estimated market impact and implementation effort for Govind Milk.</p>
+    </div>
+    <div class="matrix-wrap reveal">
+      <div class="chart-canvas-wrap" style="height:280px; margin-bottom:28px;"><canvas id="chartOpportunityScatter"></canvas></div>
+      <div class="matrix-grid" id="matrixGrid"></div>
+      <div class="matrix-legend">
+        <div class="matrix-legend-item"><span class="sw" style="background:var(--emerald)"></span>Quick Wins — low effort, high impact</div>
+        <div class="matrix-legend-item"><span class="sw" style="background:var(--amber)"></span>Strategic Bets — high effort, high impact</div>
+        <div class="matrix-legend-item"><span class="sw" style="background:var(--sky)"></span>Easy Improvements — low effort, moderate impact</div>
+        <div class="matrix-legend-item"><span class="sw" style="background:var(--red)"></span>Long-Range Watch — high effort, lower near-term impact</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand-mark">GM</div>
+        <p>Internal market-intelligence dashboard built for Govind Milk's category and strategy teams, covering the Flavoured Milk &amp; Milkshake competitive set.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Dashboard</h5>
+        <a href="#overview">Overview</a>
+        <a href="#competitors">Competitor Table</a>
+        <a href="#pricing">Pricing Intelligence</a>
+        <a href="#portfolio">Product Portfolio</a>
+      </div>
+      <div class="footer-col">
+        <h5>Analysis</h5>
+        <a href="#nutrition">Nutrition Analysis</a>
+        <a href="#customer">Customer Insights</a>
+        <a href="#platform">Platform Availability</a>
+        <a href="#brand">Brand Comparison</a>
+      </div>
+      <div class="footer-col">
+        <h5>Strategy</h5>
+        <a href="#insights">Strategic Insights</a>
+        <a href="#matrix">Opportunity Matrix</a>
+        <div style="margin-top:18px; color:#5E7196; font-size:11.5px;">Source: Internal Market Analysis workbook — 10 brands, 15 SKUs.</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Govind Milk · Category Intelligence Unit</span>
+      <span>Data as captured in the Flavoured Milk &amp; Milkshakes market analysis sheet</span>
+    </div>
+  </div>
+</footer>
+
+<button class="back-top" id="backTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script>
+const PRODUCTS = [
+  {
+    "brand": "Amul",
+    "parent": "GCMMF",
+    "product": "Kool Koko – Chocolate Flavoured Milk",
+    "category": "Flavoured Milk",
+    "pack": 200,
+    "packaging": "Can",
+    "mrp": 35,
+    "price": 35,
+    "discount": 0,
+    "price100": 17.5,
+    "segment": "Mid-Market",
+    "calories": 150,
+    "protein": 4.5,
+    "fat": 3.5,
+    "carbs": 22,
+    "sugar": 20,
+    "calcium": "200mg (~20% RDA)",
+    "shelfLife": "6 months",
+    "claims": "No Preservatives",
+    "usp": "Trusted dairy heritage brand",
+    "ingredients": "Toned milk, cocoa, sugar",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": true,
+    "official": true,
+    "rating": 4.2,
+    "reviews": "1,200+ (BigBasket) — Stable",
+    "opportunity": "Compete on trust; differentiate via exclusiveness"
+  },
+  {
+    "brand": "Amul",
+    "parent": "GCMMF",
+    "product": "Kool Café – Milk & Coffee",
+    "category": "Flavoured Milk",
+    "pack": 200,
+    "packaging": "Can",
+    "mrp": 35,
+    "price": 35,
+    "discount": 0,
+    "price100": 17.5,
+    "segment": "Mid-Market",
+    "calories": 148,
+    "protein": 4.5,
+    "fat": 3.4,
+    "carbs": 21,
+    "sugar": 19,
+    "calcium": "195mg (~19% RDA)",
+    "shelfLife": "6 months",
+    "claims": "No Preservatives",
+    "usp": "Coffee + milk hybrid format",
+    "ingredients": "Toned milk, coffee, sugar",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": true,
+    "official": true,
+    "rating": 4.2,
+    "reviews": "900+ (BigBasket) — Stable",
+    "opportunity": "Launch coffee variant to capture RTD coffee shift"
+  },
+  {
+    "brand": "Mother Dairy",
+    "parent": "Mother Dairy Fruit & Vegetable Pvt. Ltd.",
+    "product": "Milkshake – Chocolate",
+    "category": "Milkshake",
+    "pack": 180,
+    "packaging": "Carton",
+    "mrp": 30,
+    "price": 30,
+    "discount": 0,
+    "price100": 16.67,
+    "segment": "Mid-Market",
+    "calories": 145,
+    "protein": 4.2,
+    "fat": 3.8,
+    "carbs": 20,
+    "sugar": 18,
+    "calcium": "Rich in Calcium (~210mg)",
+    "shelfLife": "4 months",
+    "claims": "No Preservatives, Rich in Calcium",
+    "usp": "Calcium-forward positioning",
+    "ingredients": "Milk, cocoa solids, sugar",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": true,
+    "official": true,
+    "rating": 4.1,
+    "reviews": "2,000+ (BigBasket) — Rising",
+    "opportunity": "Match calcium claim + undercut on price"
+  },
+  {
+    "brand": "Mother Dairy",
+    "parent": "Mother Dairy Fruit & Vegetable Pvt. Ltd.",
+    "product": "Flavoured Milk – Coffee",
+    "category": "Flavoured Milk",
+    "pack": 180,
+    "packaging": "Carton",
+    "mrp": 26.2,
+    "price": 26,
+    "discount": 0.76,
+    "price100": 14.44,
+    "segment": "Mid-Market",
+    "calories": 130,
+    "protein": 4,
+    "fat": 3.2,
+    "carbs": 18,
+    "sugar": 16,
+    "calcium": "Rich in Calcium (~190mg)",
+    "shelfLife": "4 months",
+    "claims": "Rich in Calcium",
+    "usp": "Lower price coffee-milk option",
+    "ingredients": "Milk, coffee extract, sugar",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": true,
+    "official": true,
+    "rating": 3.7,
+    "reviews": "650+ (BigBasket) — Flat",
+    "opportunity": "Improve coffee taste profile, target value seekers"
+  },
+  {
+    "brand": "Mother Dairy",
+    "parent": "Mother Dairy Fruit & Vegetable Pvt. Ltd.",
+    "product": "Flavoured Milk – Pista",
+    "category": "Flavoured Milk",
+    "pack": 180,
+    "packaging": "Carton",
+    "mrp": 24,
+    "price": 24,
+    "discount": 0,
+    "price100": 13.33,
+    "segment": "Mid-Market",
+    "calories": 125,
+    "protein": 4,
+    "fat": 3,
+    "carbs": 17,
+    "sugar": 15,
+    "calcium": "~180mg",
+    "shelfLife": "4 months",
+    "claims": "—",
+    "usp": "Regional/nostalgic pista flavour",
+    "ingredients": "Milk, pista flavouring, sugar",
+    "blinkit": true,
+    "zepto": false,
+    "amazon": false,
+    "official": true,
+    "rating": 4.2,
+    "reviews": "400+ (Blinkit) — Rising",
+    "opportunity": "Whitespace: regional/nut flavours under-distributed online"
+  },
+  {
+    "brand": "Hershey's",
+    "parent": "Hershey India Pvt. Ltd.",
+    "product": "Chocolate Milkshake",
+    "category": "Milkshake",
+    "pack": 180,
+    "packaging": "PET Bottle",
+    "mrp": 30.34,
+    "price": 30,
+    "discount": 1.12,
+    "price100": 16.67,
+    "segment": "Mid-Market",
+    "calories": 160,
+    "protein": 3.8,
+    "fat": 4,
+    "carbs": 24,
+    "sugar": 22,
+    "calcium": "~150mg",
+    "shelfLife": "6 months",
+    "claims": "—",
+    "usp": "Global confectionery brand equity",
+    "ingredients": "Milk, cocoa, Hershey's chocolate syrup base",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": true,
+    "official": false,
+    "rating": 4.1,
+    "reviews": "1,800+ (BigBasket) — Stable",
+    "opportunity": "Position Govind as the 'healthier indulgence' alternative"
+  },
+  {
+    "brand": "Cavin's",
+    "parent": "Cavinkare Group",
+    "product": "Chocolate Milkshake",
+    "category": "Milkshake",
+    "pack": 180,
+    "packaging": "Tetra Pack",
+    "mrp": 34,
+    "price": 34,
+    "discount": 0,
+    "price100": 18.89,
+    "segment": "Premium",
+    "calories": 155,
+    "protein": 4.5,
+    "fat": 3.6,
+    "carbs": 21,
+    "sugar": 19,
+    "calcium": "~200mg",
+    "shelfLife": "5 months",
+    "claims": "Vitamin A, D, Zinc fortified; No Preservatives",
+    "usp": "Multi-vitamin + mineral fortification",
+    "ingredients": "Milk, cocoa, Vit A/D/Zn premix, sugar",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": true,
+    "official": true,
+    "rating": 4.2,
+    "reviews": "1,500+ (BigBasket) — Rising",
+    "opportunity": "Adopt fortification narrative — strong differentiator gap"
+  },
+  {
+    "brand": "Epigamia",
+    "parent": "Drums Food International Pvt. Ltd.",
+    "product": "Turbo – Chocolate Protein Milkshake",
+    "category": "Protein Shake",
+    "pack": 250,
+    "packaging": "PET Bottle",
+    "mrp": 141,
+    "price": 141,
+    "discount": 0,
+    "price100": 56.4,
+    "segment": "Super-Premium",
+    "calories": 180,
+    "protein": 20,
+    "fat": 3,
+    "carbs": 14,
+    "sugar": 6,
+    "calcium": "~220mg",
+    "shelfLife": "6 months",
+    "claims": "No Added Sugar / No Preservatives",
+    "usp": "High-protein, fitness-focused positioning",
+    "ingredients": "Milk protein concentrate, cocoa, stevia",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": true,
+    "official": true,
+    "rating": 3.4,
+    "reviews": "500+ (BigBasket) — Declining",
+    "opportunity": "Mid-protein SKU at lower price = clear gap (3x cheaper than Epigamia)"
+  },
+  {
+    "brand": "Epigamia",
+    "parent": "Drums Food International Pvt. Ltd.",
+    "product": "Turbo – Vanilla-Caramel Protein Milkshake",
+    "category": "Protein Shake",
+    "pack": 250,
+    "packaging": "PET Bottle",
+    "mrp": 141,
+    "price": 141,
+    "discount": 0,
+    "price100": 56.4,
+    "segment": "Super-Premium",
+    "calories": 185,
+    "protein": 20,
+    "fat": 3.2,
+    "carbs": 15,
+    "sugar": 6,
+    "calcium": "~220mg",
+    "shelfLife": "6 months",
+    "claims": "No Added Sugar / No Preservatives",
+    "usp": "Dessert-flavour protein hybrid",
+    "ingredients": "Milk protein concentrate, vanilla, caramel, stevia",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": true,
+    "official": true,
+    "rating": 3.7,
+    "reviews": "450+ (BigBasket) — Flat",
+    "opportunity": "Flavour innovation works — replicate at accessible price point"
+  },
+  {
+    "brand": "Nescafé",
+    "parent": "Nestlé India Ltd.",
+    "product": "Ready-to-Drink Cappuccino",
+    "category": "RTD Coffee",
+    "pack": 180,
+    "packaging": "Tetra Pack",
+    "mrp": 39,
+    "price": 39,
+    "discount": 0,
+    "price100": 21.67,
+    "segment": "Premium",
+    "calories": 110,
+    "protein": 3.5,
+    "fat": 3,
+    "carbs": 15,
+    "sugar": 13,
+    "calcium": "~140mg",
+    "shelfLife": "6 months",
+    "claims": "—",
+    "usp": "Global coffee brand entering RTD dairy",
+    "ingredients": "Milk, coffee, sugar",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": true,
+    "official": false,
+    "rating": 4.3,
+    "reviews": "3,000+ (Amazon) — Rising",
+    "opportunity": "RTD coffee-milk is a fast-rising sub-segment to enter"
+  },
+  {
+    "brand": "Heritage",
+    "parent": "Parle Agro (Heritage Foods)",
+    "product": "Milkshake – Chocolate & Caramel",
+    "category": "Milkshake",
+    "pack": 180,
+    "packaging": "Tetra Pack",
+    "mrp": 32,
+    "price": 32,
+    "discount": 0,
+    "price100": 17.78,
+    "segment": "Mid-Market",
+    "calories": 158,
+    "protein": 4,
+    "fat": 3.7,
+    "carbs": 23,
+    "sugar": 21,
+    "calcium": "~170mg",
+    "shelfLife": "3–6 months",
+    "claims": "Real Milk, Creamy",
+    "usp": "Indulgent dual-flavour combo",
+    "ingredients": "Real milk, cocoa, caramel",
+    "blinkit": true,
+    "zepto": false,
+    "amazon": true,
+    "official": false,
+    "rating": 4.2,
+    "reviews": "1,100+ (Amazon) — Stable",
+    "opportunity": "Dual-flavour combos are a proven indulgence lever"
+  },
+  {
+    "brand": "Verka",
+    "parent": "Punjab State Coop. Milk Producers' Fed. (PUNJAB)",
+    "product": "Flavoured Milk – Pio Thandai",
+    "category": "Flavoured Milk",
+    "pack": 200,
+    "packaging": "Bottle",
+    "mrp": 22,
+    "price": 22,
+    "discount": 0,
+    "price100": 11,
+    "segment": "Value",
+    "calories": 135,
+    "protein": 4,
+    "fat": 3,
+    "carbs": 19,
+    "sugar": 17,
+    "calcium": "~190mg",
+    "shelfLife": "4 months",
+    "claims": "No Trans Fat",
+    "usp": "Traditional thandai/local flavour",
+    "ingredients": "Milk, thandai masala blend, sugar",
+    "blinkit": true,
+    "zepto": false,
+    "amazon": false,
+    "official": false,
+    "rating": 4,
+    "reviews": "300+ (BigBasket) — Stable",
+    "opportunity": "Value + regional flavour combo — replicate with wider reach"
+  },
+  {
+    "brand": "Milky Mist",
+    "parent": "Milky Mist Dairy Food Pvt. Ltd.",
+    "product": "Milkshake – Chocolate",
+    "category": "Milkshake",
+    "pack": 220,
+    "packaging": "Tetra Pack",
+    "mrp": 33,
+    "price": 33,
+    "discount": 0,
+    "price100": 15,
+    "segment": "Mid-Market",
+    "calories": 152,
+    "protein": 4.2,
+    "fat": 3.5,
+    "carbs": 22,
+    "sugar": 20,
+    "calcium": "~185mg",
+    "shelfLife": "4 months",
+    "claims": "Rich in Flavour",
+    "usp": "Larger 220ml pack size at competitive rate",
+    "ingredients": "Milk, cocoa, sugar",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": false,
+    "official": true,
+    "rating": 3.9,
+    "reviews": "700+ (BigBasket) — Flat",
+    "opportunity": "Larger pack at similar price — strong value lever to copy"
+  },
+  {
+    "brand": "Smoodh",
+    "parent": "Parle Agro Pvt. Ltd.",
+    "product": "Flavoured Milk – Chocolate",
+    "category": "Flavoured Milk",
+    "pack": 150,
+    "packaging": "Bottle",
+    "mrp": 18,
+    "price": 18,
+    "discount": 0,
+    "price100": 12,
+    "segment": "Value",
+    "calories": 110,
+    "protein": 3.5,
+    "fat": 2.8,
+    "carbs": 16,
+    "sugar": 14,
+    "calcium": "~150mg",
+    "shelfLife": "4 months",
+    "claims": "—",
+    "usp": "Value-tier price leader",
+    "ingredients": "Milk, cocoa, sugar",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": false,
+    "official": false,
+    "rating": null,
+    "reviews": "Not yet rated — New entrant",
+    "opportunity": "Value segment leader — key benchmark for mass-market pricing"
+  },
+  {
+    "brand": "Smoodh",
+    "parent": "Parle Agro Pvt. Ltd.",
+    "product": "Flavoured Milk – Chocolate Hazelnut",
+    "category": "Flavoured Milk",
+    "pack": 150,
+    "packaging": "Bottle",
+    "mrp": 18,
+    "price": 18,
+    "discount": 0,
+    "price100": 12,
+    "segment": "Value",
+    "calories": 112,
+    "protein": 3.5,
+    "fat": 3,
+    "carbs": 16,
+    "sugar": 14,
+    "calcium": "~150mg",
+    "shelfLife": "4 months",
+    "claims": "—",
+    "usp": "Hazelnut twist at value price",
+    "ingredients": "Milk, cocoa, hazelnut flavouring, sugar",
+    "blinkit": true,
+    "zepto": true,
+    "amazon": false,
+    "official": false,
+    "rating": null,
+    "reviews": "Not yet rated — New entrant",
+    "opportunity": "Hazelnut/nutty flavours under-explored at value tier"
+  }
+];
+
+/* ============================================================
+   GOVIND MILK DASHBOARD — APPLICATION LOGIC
+   ============================================================ */
+
+/* ---------- THEME ---------- */
+const chartRegistry = {};
+const themeToggle = document.getElementById('themeToggle');
+const sunIcon = document.getElementById('themeIconSun');
+const moonIcon = document.getElementById('themeIconMoon');
+function setTheme(mode){
+  document.documentElement.setAttribute('data-theme', mode);
+  if(mode === 'dark'){ sunIcon.style.display='none'; moonIcon.style.display='block'; }
+  else { sunIcon.style.display='block'; moonIcon.style.display='none'; }
+  Object.values(chartRegistry).forEach(c => { if(c){ updateChartTheme(c); c.update(); } });
+}
+let currentTheme = 'light';
+themeToggle.addEventListener('click', () => {
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  setTheme(currentTheme);
+});
+
+/* ---------- HELPERS ---------- */
+const fmt1 = n => Number(n).toFixed(1);
+const fmt2 = n => Number(n).toFixed(2);
+const avg = arr => arr.reduce((a,b)=>a+b,0) / arr.length;
+const sum = arr => arr.reduce((a,b)=>a+b,0);
+function groupBy(arr, fn){
+  const m = {};
+  arr.forEach(item => { const k = fn(item); (m[k] = m[k] || []).push(item); });
+  return m;
+}
+function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+const SEGMENT_COLORS = { 'Value': '#11A672', 'Mid-Market': '#2E9FE0', 'Premium': '#E8A23B', 'Super-Premium': '#D5635A' };
+const CATEGORY_COLORS = { 'Flavoured Milk': '#2E9FE0', 'Milkshake': '#E8A23B', 'Protein Shake': '#11A672', 'RTD Coffee': '#0A1F3D' };
+const PACKAGING_COLORS = ['#2E9FE0', '#E8A23B', '#11A672', '#D5635A', '#828FA0'];
+
+/* ============================================================
+   DERIVED METRICS (computed directly from PRODUCTS — single source of truth)
+   ============================================================ */
+const brands = [...new Set(PRODUCTS.map(p => p.brand))];
+const totalCompetitors = brands.length;
+const totalProducts = PRODUCTS.length;
+const avgPrice = avg(PRODUCTS.map(p => p.price));
+const avgPrice100 = avg(PRODUCTS.map(p => p.price100));
+const ratedProducts = PRODUCTS.filter(p => p.rating !== null);
+const avgRating = avg(ratedProducts.map(p => p.rating));
+
+const brandRatings = groupBy(ratedProducts, p => p.brand);
+let highestRatedBrand = null, highestRatedBrandVal = -1;
+Object.entries(brandRatings).forEach(([b, items]) => {
+  const a = avg(items.map(i => i.rating));
+  if (a > highestRatedBrandVal){ highestRatedBrandVal = a; highestRatedBrand = b; }
+});
+const tiedTopBrands = Object.entries(brandRatings).filter(([b,items]) => Math.abs(avg(items.map(i=>i.rating)) - highestRatedBrandVal) < 0.001).map(([b])=>b);
+
+const highestRatedProduct = ratedProducts.reduce((max, p) => p.rating > max.rating ? p : max, ratedProducts[0]);
+
+const segCounts = groupBy(PRODUCTS, p => p.segment);
+const economyCount = (segCounts['Value']||[]).length;
+const premiumCount = (segCounts['Premium']||[]).length + (segCounts['Super-Premium']||[]).length;
+const midCount = (segCounts['Mid-Market']||[]).length;
+
+const platforms = ['blinkit','zepto','amazon','official'];
+const platformLabels = {blinkit:'Blinkit', zepto:'Zepto', amazon:'Amazon', official:'Official Site'};
+const platformCoverage = platforms.map(p => ({
+  key: p, label: platformLabels[p],
+  count: PRODUCTS.filter(x => x[p]).length,
+  pct: Math.round(100 * PRODUCTS.filter(x => x[p]).length / totalProducts)
+}));
+const avgPlatformCoveragePct = Math.round(avg(platformCoverage.map(p=>p.pct)));
+
+/* ============================================================
+   KPI CARDS
+   ============================================================ */
+const kpiIcon = (path) => `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
+const ICONS = {
+  brands: '<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/>',
+  products: '<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/>',
+  rupee: '<path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3a4 4 0 100-8"/>',
+  ruler: '<path d="M21.3 8.7L15.3 2.7a1 1 0 00-1.4 0L2.7 13.9a1 1 0 000 1.4l6 6a1 1 0 001.4 0L21.3 10.1a1 1 0 000-1.4z"/><path d="M14.5 6.5l1 1M11.5 9.5l1.5 1.5M8.5 12.5l1 1"/>',
+  star: '<path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21l1.2-6.9-5-4.9 6.9-1L12 2z"/>',
+  award: '<circle cx="12" cy="8" r="6"/><path d="M8.2 13.7L7 23l5-3 5 3-1.2-9.3"/>',
+  trend: '<path d="M3 17l6-6 4 4 8-8M21 7h-6v6"/>',
+  scale: '<path d="M12 3v18M5 7l-3 6a3 3 0 006 0l-3-6zm14 0l-3 6a3 3 0 006 0l-3-6zM3 7h18M8 3h8"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18 14 14 0 010-18z"/>'
+};
+
+const kpiData = [
+  { label:'Total Competitors', value: totalCompetitors, sub:'Distinct brands tracked in the category', icon:ICONS.brands, bg:'bg-navy', tag:null, count:{target:totalCompetitors, decimals:0} },
+  { label:'Total Products', value: totalProducts, sub:`Across ${Object.keys(groupBy(PRODUCTS,p=>p.category)).length} product categories`, icon:ICONS.products, bg:'bg-sky', tag:null, count:{target:totalProducts, decimals:0} },
+  { label:'Average Selling Price', value: `₹${fmt2(avgPrice)}`, sub:`Range: ₹${Math.min(...PRODUCTS.map(p=>p.price))} – ₹${Math.max(...PRODUCTS.map(p=>p.price))}`, icon:ICONS.rupee, bg:'bg-emerald', tag:null, count:{target:avgPrice, decimals:2, prefix:'₹'} },
+  { label:'Avg. Price / 100ml', value: `₹${fmt2(avgPrice100)}`, sub:`Range: ₹${fmt2(Math.min(...PRODUCTS.map(p=>p.price100)))} – ₹${fmt2(Math.max(...PRODUCTS.map(p=>p.price100)))}`, icon:ICONS.ruler, bg:'bg-amber', tag:null, count:{target:avgPrice100, decimals:2, prefix:'₹'} },
+  { label:'Highest Rated Brand', value: tiedTopBrands.length > 1 ? tiedTopBrands.join(' / ') : highestRatedBrand, sub:`Avg. rating ${fmt1(highestRatedBrandVal)} ★`, icon:ICONS.award, bg:'bg-navy', tag:{cls:'tag-amber', text:tiedTopBrands.length>1 ? `${tiedTopBrands.length}-way tie`:'Category leader'} },
+  { label:'Highest Rated Product', value: fmt1(highestRatedProduct.rating), sub:`${highestRatedProduct.brand} — ${highestRatedProduct.product}`, icon:ICONS.star, bg:'bg-amber', tag:null, count:{target:highestRatedProduct.rating, decimals:1} },
+  { label:'Average Rating', value: fmt2(avgRating), sub:`Across ${ratedProducts.length} of ${totalProducts} rated SKUs`, icon:ICONS.trend, bg:'bg-emerald', tag:{cls:'tag-sky', text:`${totalProducts - ratedProducts.length} unrated entrants`}, count:{target:avgRating, decimals:2} },
+  { label:'Premium vs. Economy', value: `${premiumCount} : ${economyCount}`, sub:`${midCount} SKUs sit in Mid-Market (the core battleground)`, icon:ICONS.scale, bg:'bg-red', tag:null },
+  { label:'Platform Coverage', value: `${platforms.length} channels`, sub:`Avg. ${avgPlatformCoveragePct}% of SKUs listed per channel`, icon:ICONS.globe, bg:'bg-sky', tag:{cls:'tag-emerald', text:`Blinkit @ ${platformCoverage[0].pct}%`} },
+];
+
+const kpiGrid = document.getElementById('kpiGrid');
+kpiGrid.innerHTML = kpiData.map(k => `
+  <div class="kpi-card">
+    <div class="kpi-top">
+      <div class="icon-badge ${k.bg}">${kpiIcon(k.icon)}</div>
+      ${k.tag ? `<span class="kpi-tag ${k.tag.cls}">${k.tag.text}</span>` : ''}
+    </div>
+    <div class="kpi-label">${k.label}</div>
+    <div class="kpi-value"${k.count ? ` data-count-target="${k.count.target}" data-count-decimals="${k.count.decimals}" data-count-prefix="${k.count.prefix||''}"` : ''}>${k.count ? (k.count.prefix||'')+'0' : k.value}</div>
+    <div class="kpi-sub">${k.sub}</div>
+  </div>
+`).join('');
+
+/* ---------- KPI COUNT-UP ANIMATION ---------- */
+(function(){
+  const els = document.querySelectorAll('[data-count-target]');
+  const animate = (el) => {
+    const target = parseFloat(el.dataset.countTarget);
+    const decimals = parseInt(el.dataset.countDecimals, 10);
+    const prefix = el.dataset.countPrefix || '';
+    const dur = 1100, start = performance.now();
+    function tick(now){
+      const p = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = prefix + (target * eased).toFixed(decimals);
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  };
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting){ animate(e.target); io.unobserve(e.target); } });
+  }, { threshold: 0.4 });
+  els.forEach(el => io.observe(el));
+})();
+
+/* ============================================================
+   COMPETITOR TABLE
+   ============================================================ */
+const tbody = document.getElementById('productTableBody');
+let sortKey = 'brand', sortDir = 1;
+let activeFilters = { search:'', brand:'', category:'', segment:'', platform:'' };
+
+function populateFilterOptions(){
+  const brandSel = document.getElementById('filterBrand');
+  const catSel = document.getElementById('filterCategory');
+  const segSel = document.getElementById('filterSegment');
+  [...new Set(PRODUCTS.map(p=>p.brand))].sort().forEach(b => brandSel.insertAdjacentHTML('beforeend', `<option value="${b}">${b}</option>`));
+  [...new Set(PRODUCTS.map(p=>p.category))].sort().forEach(c => catSel.insertAdjacentHTML('beforeend', `<option value="${c}">${c}</option>`));
+  [...new Set(PRODUCTS.map(p=>p.segment))].sort().forEach(s => segSel.insertAdjacentHTML('beforeend', `<option value="${s}">${s}</option>`));
+}
+populateFilterOptions();
+
+/* ============================================================
+   HERO AMBIENT DATA VISUALIZATION — bubbles positioned from real SKU data
+   ============================================================ */
+(function(){
+  const wrap = document.getElementById('heroViz');
+  if (!wrap) return;
+  const maxPrice = Math.max(...PRODUCTS.map(p=>p.price));
+  const minPrice = Math.min(...PRODUCTS.map(p=>p.price));
+  PRODUCTS.forEach((p, i) => {
+    const el = document.createElement('div');
+    el.className = 'hero-bubble';
+    const xPct = 8 + ((p.price - minPrice) / (maxPrice - minPrice)) * 84;
+    const yPct = 10 + (i % 5) * 17 + (i % 3) * 4;
+    const size = 18 + (p.pack / 250) * 46;
+    el.style.left = xPct + '%';
+    el.style.top = yPct + '%';
+    el.style.width = size + 'px';
+    el.style.height = size + 'px';
+    el.style.animationDuration = (7 + (i % 5) * 1.6) + 's';
+    el.style.animationDelay = (i * 0.35) + 's';
+    el.title = `${p.brand} — ${p.product}: ₹${p.price}`;
+    wrap.appendChild(el);
+  });
+})();
+
+/* ============================================================
+   INSIGHT TICKER — real data callouts, auto-scrolling
+   ============================================================ */
+(function(){
+  const track = document.getElementById('tickerTrack');
+  if (!track) return;
+  const items = [
+    `<b>${highestRatedProduct.brand}</b> leads all SKUs at <b>${fmt1(highestRatedProduct.rating)}★</b> — ${highestRatedProduct.product}`,
+    `Average category price sits at <b>₹${fmt2(avgPrice)}</b>, ranging ₹${Math.min(...PRODUCTS.map(p=>p.price))}–₹${Math.max(...PRODUCTS.map(p=>p.price))}`,
+    `<b>${midCount} of ${totalProducts} SKUs</b> compete in Mid-Market — the most crowded tier`,
+    `Blinkit lists <b>100%</b> of tracked SKUs; Official Site coverage trails at <b>${platformCoverage.find(x=>x.key==='official').pct}%</b>`,
+    `Only <b>Epigamia</b> breaks 5g protein per SKU — the clearest nutrition white space in the category`,
+    `<b>${totalCompetitors} brands</b>, <b>${totalProducts} SKUs</b> tracked across Flavoured Milk, Milkshake, Protein Shake &amp; RTD Coffee`,
+    `Cavin's is the only brand using a fortification claim — an open positioning opportunity`
+  ];
+  const html = items.map(t => `<span class="ticker-item"><span class="dot"></span>${t}</span>`).join('');
+  track.innerHTML = html + html; // duplicate for seamless loop
+})();
+
+/* ---------- SCROLL PROGRESS BAR ---------- */
+(function(){
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    bar.style.width = pct + '%';
+  }, { passive:true });
+})();
+
+function applyFiltersAndSort(){
+  let rows = PRODUCTS.filter(p => {
+    if (activeFilters.brand && p.brand !== activeFilters.brand) return false;
+    if (activeFilters.category && p.category !== activeFilters.category) return false;
+    if (activeFilters.segment && p.segment !== activeFilters.segment) return false;
+    if (activeFilters.platform && !p[activeFilters.platform]) return false;
+    if (activeFilters.search){
+      const s = activeFilters.search.toLowerCase();
+      const hay = `${p.brand} ${p.product} ${p.category} ${p.usp} ${p.ingredients} ${p.claims}`.toLowerCase();
+      if (!hay.includes(s)) return false;
+    }
+    return true;
+  });
+  rows.sort((a,b) => {
+    let av = a[sortKey], bv = b[sortKey];
+    if (sortKey === 'blinkit' || sortKey === 'zepto' || sortKey === 'amazon' || sortKey === 'official'){
+      av = av ? 1 : 0; bv = bv ? 1 : 0;
+    }
+    if (av === null) av = -Infinity;
+    if (bv === null) bv = -Infinity;
+    if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
+    return (av - bv) * sortDir;
+  });
+  return rows;
+}
+
+function renderTable(){
+  const rows = applyFiltersAndSort();
+  document.getElementById('tableMeta').textContent = `${rows.length} of ${totalProducts} products`;
+  tbody.innerHTML = rows.map(p => `
+    <tr>
+      <td class="strong">${p.brand}</td>
+      <td>${p.product}</td>
+      <td>${p.category}</td>
+      <td>${p.pack}</td>
+      <td class="strong">₹${fmt2(p.price)}</td>
+      <td>₹${fmt2(p.price100)}</td>
+      <td><span class="cell-pill seg-${p.segment.replace(' ','-')}">${p.segment}</span></td>
+      <td>${p.calories}</td>
+      <td>${p.protein}</td>
+      <td>${p.sugar}</td>
+      <td>${p.rating !== null ? `<span class="rating-cell">${kpiIconStar()}${fmt1(p.rating)}</span>` : `<span class="no-rating">New</span>`}</td>
+      <td class="${p.blinkit ? 'plat-yes' : 'plat-no'}">${p.blinkit ? '✓' : '—'}</td>
+      <td class="${p.zepto ? 'plat-yes' : 'plat-no'}">${p.zepto ? '✓' : '—'}</td>
+      <td class="${p.amazon ? 'plat-yes' : 'plat-no'}">${p.amazon ? '✓' : '—'}</td>
+      <td class="${p.official ? 'plat-yes' : 'plat-no'}">${p.official ? '✓' : '—'}</td>
+    </tr>
+  `).join('');
+}
+function kpiIconStar(){ return `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21l1.2-6.9-5-4.9 6.9-1L12 2z"/></svg>`; }
+
+document.getElementById('tableSearch').addEventListener('input', e => { activeFilters.search = e.target.value; renderTable(); });
+document.getElementById('filterBrand').addEventListener('change', e => { activeFilters.brand = e.target.value; renderTable(); });
+document.getElementById('filterCategory').addEventListener('change', e => { activeFilters.category = e.target.value; renderTable(); });
+document.getElementById('filterSegment').addEventListener('change', e => { activeFilters.segment = e.target.value; renderTable(); });
+document.getElementById('filterPlatform').addEventListener('change', e => { activeFilters.platform = e.target.value; renderTable(); });
+
+document.querySelectorAll('#productTable thead th').forEach(th => {
+  th.addEventListener('click', () => {
+    const key = th.dataset.key;
+    if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+    document.querySelectorAll('#productTable thead th .sort-arrow').forEach(s => s.textContent = '');
+    th.querySelector('.sort-arrow').textContent = sortDir === 1 ? '▲' : '▼';
+    renderTable();
+  });
+});
+renderTable();
+
+
+
+/* ============================================================
+   STRATEGIC INSIGHTS
+   ============================================================ */
+const insights = [
+  {
+    tag:'Pricing Strategy', color:'var(--sky)',
+    h:'Mid-Market is crowded; the price ladder has clean rungs above and below it',
+    p:`8 of 15 SKUs (53%) sit in Mid-Market at ₹24–₹35, averaging ₹${fmt2(avg((segCounts['Mid-Market']||[]).map(p=>p.price)))}. Value (₹18–₹22) and Premium/Super-Premium (₹32–₹141) are each held by only 2–3 SKUs — Govind can win Mid-Market on differentiation, or step into the thinner Premium rung where Cavin's and Nescafé currently sit alone.`
+  },
+  {
+    tag:'Distribution', color:'var(--emerald)',
+    h:'Blinkit is table stakes; Official Site and Amazon are where reach actually separates brands',
+    p:`Blinkit lists 100% of tracked SKUs, but Official Site coverage falls to ${platformCoverage.find(p=>p.key==='official').pct}% and Amazon to ${platformCoverage.find(p=>p.key==='amazon').pct}%. Verka and Smoodh are Blinkit/Zepto-only — full 4-channel presence is itself a differentiator Govind can claim early.`
+  },
+  {
+    tag:'Nutrition Whitespace', color:'var(--amber)',
+    h:'Protein is the most under-served macro lever in the category',
+    p:`Only Epigamia's two Protein Shakes break 5g of protein (20g each), and they do it at ₹56.4/100ml — over 2.6× the next-priciest SKU. Every Flavoured Milk and Milkshake SKU clusters at 3.5–4.5g protein. A mid-protein (8–12g) SKU priced near Mid-Market would have no direct competitor.`
+  },
+  {
+    tag:'Competitive Positioning', color:'var(--sky)',
+    h:"Fortification claims are rare — Cavin's is the only brand using them",
+    p:`Cavin's Chocolate Milkshake is the sole SKU in the dataset carrying a Vitamin A/D/Zinc fortification claim, and it rates 4.2★. No other competitor — including market leaders Amul and Mother Dairy — makes a functional-nutrition claim, leaving the "fortified dairy" narrative open.`
+  },
+  {
+    tag:'Emerging Sub-Segment', color:'var(--amber)',
+    h:'RTD coffee-milk is the fastest-rising format in the data',
+    p:`Nescafé's Ready-to-Drink Cappuccino is the highest-rated SKU in the entire set (4.3★) and its review trend is marked "Rising," yet it is the only dedicated RTD Coffee SKU tracked. Amul's Kool Café (Milk & Coffee) is the closest adjacent product — both signal coffee-milk hybrids are gaining share faster than the category average.`
+  },
+  {
+    tag:'Portfolio Strength', color:'var(--emerald)',
+    h:'Pack size is an underused value lever — only Milky Mist plays it',
+    p:`Milky Mist offers 220ml — the largest standard pack — at ₹33, just ₹1 above Cavin's 180ml Premium SKU. No other Mid-Market brand has matched this "more product, same price" approach, making it a low-effort, easily replicable value signal.`
+  },
+  {
+    tag:'Customer Sentiment', color:'var(--red)',
+    h:'Premium pricing is not guaranteeing satisfaction at the top of the ladder',
+    p:`Epigamia's two Super-Premium Protein Shakes are the highest-priced SKUs in the category (₹141) but rate lowest among all rated products (3.4★ and 3.7★), with trends marked "Declining" and "Flat." High price alone is not converting into customer approval — execution on taste or value perception likely needs to catch up to the price point.`
+  },
+  {
+    tag:'White-Space Opportunity', color:'var(--sky)',
+    h:'Regional and nutty flavours are real but under-distributed',
+    p:`Mother Dairy's Pista flavour (4.2★, "Rising") is listed on only Blinkit and Official Site; Verka's Pio Thandai (4.0★) is Blinkit-only. Both rate well despite minimal distribution — regional/nostalgic flavours appear to have demand that current players aren't fully serving online.`
+  }
+];
+document.getElementById('insightGrid').innerHTML = insights.map(i => `
+  <div class="insight-card">
+    <div class="bar" style="background:${i.color}"></div>
+    <h4>${i.h}</h4>
+    <p>${i.p}</p>
+    <div class="tag">${i.tag}</div>
+  </div>
+`).join('');
+
+/* ============================================================
+   GOVIND OPPORTUNITY MATRIX
+   ============================================================ */
+const matrixData = {
+  quickWins: {
+    label:'Quick Wins', sub:'Low effort · High impact', color:'#11A672',
+    items:[
+      { t:'Reposition as the "healthier indulgence"', d:'Hershey\'s leads on confectionery equity but Govind\'s dairy-trust heritage and lower sugar potential can be marketed against it at similar price points.', x:22, y:78 },
+      { t:'Match Milky Mist\'s larger-pack lever', d:'A 220ml pack near the ₹33 price point delivers a visible value signal with no new SKU development needed.', x:16, y:66 }
+    ]
+  },
+  strategicBets: {
+    label:'Strategic Bets', sub:'High effort · High impact', color:'#E8A23B',
+    items:[
+      { t:'Launch a mid-protein milkshake', d:'A 8–12g protein SKU priced near Mid-Market would undercut Epigamia\'s ₹56.4/100ml by roughly 3× while filling a gap no competitor occupies.', x:80, y:88 },
+      { t:'Enter the RTD coffee-milk sub-segment', d:'Nescafé is the only dedicated player and the highest-rated SKU in the category (4.3★, "Rising") — a credible second entrant could capture early share.', x:70, y:74 }
+    ]
+  },
+  easyImprovements: {
+    label:'Easy Improvements', sub:'Low effort · Moderate impact', color:'#2E9FE0',
+    items:[
+      { t:'Close Amazon & Official Site gaps', d:'Category-wide coverage sits at 67% (Amazon) and 60% (Official Site) — full 4-channel listing is achievable without product changes.', x:20, y:38 },
+      { t:'Develop regional/nutty flavour SKUs', d:'Pista and thandai-style flavours rate 4.0–4.2★ on minimal distribution — low-risk line extensions with proven demand signals.', x:30, y:28 }
+    ]
+  },
+  longRangeWatch: {
+    label:'Long-Range Watch', sub:'High effort · Lower near-term impact', color:'#D5635A',
+    items:[
+      { t:'Multi-vitamin/mineral fortification', d:'A meaningful differentiator (Cavin\'s is the only current adopter) but requires reformulation and claims substantiation before any payoff.', x:78, y:32 },
+      { t:'Monitor Epigamia\'s premium softness', d:'Ratings are declining/flat despite top pricing — informative for category trends, but not an immediate action for Govind.', x:68, y:18 }
+    ]
+  }
+};
+const matrixGrid = document.getElementById('matrixGrid');
+function quadHTML(key, pos){
+  const q = matrixData[key];
+  return `
+    <div class="matrix-quad" style="${pos}">
+      <div class="quad-label"><span class="sw" style="background:${q.color}"></span>${q.label} <span style="font-weight:500; text-transform:none; letter-spacing:0; color:var(--text-muted);">— ${q.sub}</span></div>
+      <div class="quad-items">
+        ${q.items.map(it => `<div class="quad-item" style="border-left-color:${q.color}"><strong>${it.t}</strong>${it.d}</div>`).join('')}
+      </div>
+    </div>`;
+}
+matrixGrid.innerHTML =
+  quadHTML('quickWins','') +
+  quadHTML('strategicBets','') +
+  quadHTML('easyImprovements','') +
+  quadHTML('longRangeWatch','') +
+  `<div class="matrix-axis-label matrix-axis-x">Effort to Implement →</div>
+   <div class="matrix-axis-label matrix-axis-y">Market Impact →</div>`;
+
+/* ============================================================
+
+   NAV: active link tracking + smooth scroll + mobile fallback
+   ============================================================ */
+const navButtons = document.querySelectorAll('.navlinks button');
+navButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelector(btn.dataset.target).scrollIntoView({ behavior:'smooth' });
+  });
+});
+const sectionIds = ['overview','competitors','pricing','portfolio','nutrition','customer','platform','brand','insights','matrix'];
+const sectionEls = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting){
+      navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === '#' + entry.target.id));
+    }
+  });
+}, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+sectionEls.forEach(el => navObserver.observe(el));
+
+/* ---------- REVEAL ON SCROLL ---------- */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => { if (entry.isIntersecting){ entry.target.classList.add('in'); revealObserver.unobserve(entry.target); } });
+}, { threshold: 0.01, rootMargin: '0px 0px -5% 0px' });
+revealEls.forEach(el => revealObserver.observe(el));
+// Safety net: ensure any reveal element already in view (or that the observer
+// misses due to layout timing) becomes visible shortly after load.
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    revealEls.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight + 200) el.classList.add('in');
+    });
+  }, 400);
+});
+// Absolute fallback — guarantees nothing is left permanently invisible.
+setTimeout(() => revealEls.forEach(el => el.classList.add('in')), 2500);
+
+/* ---------- BACK TO TOP ---------- */
+const backTop = document.getElementById('backTop');
+window.addEventListener('scroll', () => {
+  backTop.classList.toggle('show', window.scrollY > 600);
+});
+backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+
+/* ============================================================
+   CHART.JS GLOBAL DEFAULTS
+   ============================================================ */
+function runCharts(){
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 12;
+
+function gridColor(){ return getComputedStyle(document.documentElement).getPropertyValue('--border-soft').trim(); }
+function textColor(){ return getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim(); }
+
+function baseScaleOpts(){
+  return {
+    grid: { color: gridColor(), drawTicks:false },
+    ticks: { color: textColor() },
+    border: { display:false }
+  };
+}
+
+function updateChartTheme(chart){
+  const tc = textColor(), gc = gridColor();
+  if (chart.options.scales){
+    Object.values(chart.options.scales).forEach(sc => {
+      if (sc.grid) sc.grid.color = gc;
+      if (sc.ticks) sc.ticks.color = tc;
+    });
+  }
+  if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels){
+    chart.options.plugins.legend.labels.color = tc;
+  }
+}
+
+const tooltipBase = {
+  backgroundColor: '#0A1F3D',
+  titleFont: { weight:700, size:12.5 },
+  bodyFont: { size:12 },
+  padding: 10,
+  cornerRadius: 8,
+  displayColors: true,
+  boxPadding: 4
+};
+
+/* ---------- 1. PRICE SCATTER (bubble) ---------- */
+try {
+(() => {
+  const segs = Object.keys(SEGMENT_COLORS);
+  const datasets = segs.map(seg => ({
+    label: seg,
+    data: PRODUCTS.filter(p => p.segment === seg).map(p => ({ x:p.price, y:p.price100, r: Math.max(6, p.pack/14), brand:p.brand, product:p.product })),
+    backgroundColor: SEGMENT_COLORS[seg] + 'B3',
+    borderColor: SEGMENT_COLORS[seg],
+    borderWidth: 1.5
+  }));
+  const ctx = document.getElementById('chartPriceScatter');
+  chartRegistry.priceScatter = new Chart(ctx, {
+    type: 'bubble',
+    data: { datasets },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      scales: {
+        x: { ...baseScaleOpts(), title:{ display:true, text:'Selling Price (₹)', color:textColor() } },
+        y: { ...baseScaleOpts(), title:{ display:true, text:'Price per 100ml (₹)', color:textColor() } }
+      },
+      plugins: {
+        legend: { position:'bottom', labels:{ color:textColor(), usePointStyle:true, boxWidth:8 } },
+        tooltip: { ...tooltipBase, callbacks: { label: (c) => `${c.raw.brand} — ${c.raw.product}: ₹${c.raw.x} (₹${fmt2(c.raw.y)}/100ml)` } }
+      }
+    }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 2. AVG PRICE BY SEGMENT ---------- */
+try {
+(() => {
+  const segs = ['Value','Mid-Market','Premium','Super-Premium'];
+  const data = segs.map(s => avg((segCounts[s]||[]).map(p=>p.price)));
+  chartRegistry.avgPriceSegment = new Chart(document.getElementById('chartAvgPriceSegment'), {
+    type:'bar',
+    data:{ labels:segs, datasets:[{ data, backgroundColor: segs.map(s=>SEGMENT_COLORS[s]), borderRadius:8, maxBarThickness:46 }]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{ x:{...baseScaleOpts(), grid:{display:false}}, y:{...baseScaleOpts(), title:{display:true,text:'₹ avg.', color:textColor()}} },
+      plugins:{ legend:{display:false}, tooltip:{...tooltipBase, callbacks:{label:c=>`₹${fmt2(c.raw)} avg. selling price`}} }
+    }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 3. AVG P100 BY SEGMENT ---------- */
+try {
+(() => {
+  const segs = ['Value','Mid-Market','Premium','Super-Premium'];
+  const data = segs.map(s => avg((segCounts[s]||[]).map(p=>p.price100)));
+  chartRegistry.avgP100Segment = new Chart(document.getElementById('chartAvgP100Segment'), {
+    type:'bar',
+    data:{ labels:segs, datasets:[{ data, backgroundColor: segs.map(s=>SEGMENT_COLORS[s]+'CC'), borderColor:segs.map(s=>SEGMENT_COLORS[s]), borderWidth:1.5, borderRadius:8, maxBarThickness:46 }]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{ x:{...baseScaleOpts(), grid:{display:false}}, y:{...baseScaleOpts(), title:{display:true,text:'₹/100ml avg.', color:textColor()}} },
+      plugins:{ legend:{display:false}, tooltip:{...tooltipBase, callbacks:{label:c=>`₹${fmt2(c.raw)} per 100ml`}} }
+    }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 4. CATEGORY MIX (doughnut) ---------- */
+try {
+(() => {
+  const cats = Object.keys(groupBy(PRODUCTS, p=>p.category));
+  const data = cats.map(c => PRODUCTS.filter(p=>p.category===c).length);
+  chartRegistry.categoryMix = new Chart(document.getElementById('chartCategoryMix'), {
+    type:'doughnut',
+    data:{ labels:cats, datasets:[{ data, backgroundColor:cats.map(c=>CATEGORY_COLORS[c]), borderWidth:3, borderColor: cssVar('--surface') || '#fff' }]},
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins:{ legend:{position:'bottom', labels:{color:textColor(), usePointStyle:true, boxWidth:8, padding:14}}, tooltip:{...tooltipBase, callbacks:{label:c=>`${c.label}: ${c.raw} SKUs (${Math.round(100*c.raw/totalProducts)}%)`}} } }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 5. SEGMENT MIX (doughnut) ---------- */
+try {
+(() => {
+  const segs = ['Value','Mid-Market','Premium','Super-Premium'];
+  const data = segs.map(s => (segCounts[s]||[]).length);
+  chartRegistry.segmentMix = new Chart(document.getElementById('chartSegmentMix'), {
+    type:'doughnut',
+    data:{ labels:segs, datasets:[{ data, backgroundColor:segs.map(s=>SEGMENT_COLORS[s]), borderWidth:3, borderColor: cssVar('--surface') || '#fff' }]},
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'62%',
+      plugins:{ legend:{position:'bottom', labels:{color:textColor(), usePointStyle:true, boxWidth:8, padding:14}}, tooltip:{...tooltipBase, callbacks:{label:c=>`${c.label}: ${c.raw} SKUs (${Math.round(100*c.raw/totalProducts)}%)`}} } }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 6. PACKAGING MIX (bar) ---------- */
+try {
+(() => {
+  const packs = Object.keys(groupBy(PRODUCTS, p=>p.packaging)).sort((a,b)=> PRODUCTS.filter(p=>p.packaging===b).length - PRODUCTS.filter(p=>p.packaging===a).length);
+  const data = packs.map(c => PRODUCTS.filter(p=>p.packaging===c).length);
+  chartRegistry.packagingMix = new Chart(document.getElementById('chartPackagingMix'), {
+    type:'bar',
+    data:{ labels:packs, datasets:[{ data, backgroundColor: packs.map((_,i)=>PACKAGING_COLORS[i % PACKAGING_COLORS.length]), borderRadius:8, maxBarThickness:40 }]},
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      scales:{ x:{...baseScaleOpts(), title:{display:true,text:'SKUs', color:textColor()}}, y:{...baseScaleOpts(), grid:{display:false}} },
+      plugins:{ legend:{display:false}, tooltip:{...tooltipBase, callbacks:{label:c=>`${c.raw} SKUs`}} }
+    }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 7. PROTEIN vs SUGAR (bubble) ---------- */
+try {
+(() => {
+  const cats = Object.keys(CATEGORY_COLORS);
+  const datasets = cats.filter(c => PRODUCTS.some(p=>p.category===c)).map(cat => ({
+    label: cat,
+    data: PRODUCTS.filter(p=>p.category===cat).map(p => ({ x:p.sugar, y:p.protein, r: Math.max(6, p.calories/14), brand:p.brand, product:p.product, cal:p.calories })),
+    backgroundColor: CATEGORY_COLORS[cat] + 'B3',
+    borderColor: CATEGORY_COLORS[cat],
+    borderWidth:1.5
+  }));
+  chartRegistry.proteinSugar = new Chart(document.getElementById('chartProteinSugar'), {
+    type:'bubble',
+    data:{ datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{ x:{...baseScaleOpts(), title:{display:true,text:'Sugar (g)', color:textColor()}}, y:{...baseScaleOpts(), title:{display:true,text:'Protein (g)', color:textColor()}} },
+      plugins:{ legend:{position:'bottom', labels:{color:textColor(), usePointStyle:true, boxWidth:8}}, tooltip:{...tooltipBase, callbacks:{label:c=>`${c.raw.brand} — ${c.raw.product}: ${c.raw.y}g protein, ${c.raw.x}g sugar, ${c.raw.cal} kcal`}} }
+    }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 8. MACROS BY CATEGORY (mixed dual-axis bar) ---------- */
+try {
+(() => {
+  const cats = Object.keys(groupBy(PRODUCTS, p=>p.category));
+  const calData = cats.map(c => avg(PRODUCTS.filter(p=>p.category===c).map(p=>p.calories)));
+  const proteinData = cats.map(c => avg(PRODUCTS.filter(p=>p.category===c).map(p=>p.protein)));
+  const sugarData = cats.map(c => avg(PRODUCTS.filter(p=>p.category===c).map(p=>p.sugar)));
+  chartRegistry.macrosByCategory = new Chart(document.getElementById('chartMacrosByCategory'), {
+    type:'bar',
+    data:{ labels:cats, datasets:[
+      { label:'Avg Calories (kcal)', data:calData, backgroundColor:'#0A1F3D', borderRadius:6, yAxisID:'y', maxBarThickness:28 },
+      { label:'Avg Protein (g)', data:proteinData, backgroundColor:'#11A672', borderRadius:6, yAxisID:'y1', maxBarThickness:28 },
+      { label:'Avg Sugar (g)', data:sugarData, backgroundColor:'#E8A23B', borderRadius:6, yAxisID:'y1', maxBarThickness:28 }
+    ]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        x:{...baseScaleOpts(), grid:{display:false}},
+        y:{...baseScaleOpts(), type:'linear', position:'left', title:{display:true,text:'kcal', color:textColor()}},
+        y1:{...baseScaleOpts(), type:'linear', position:'right', grid:{display:false}, title:{display:true,text:'grams', color:textColor()}}
+      },
+      plugins:{ legend:{position:'bottom', labels:{color:textColor(), usePointStyle:true, boxWidth:8}}, tooltip:tooltipBase }
+    }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 9. RATING BY BRAND (horizontal bar) ---------- */
+try {
+(() => {
+  const brandAvg = Object.entries(brandRatings).map(([b, items]) => ({ brand:b, val: avg(items.map(i=>i.rating)) })).sort((a,b)=>b.val-a.val);
+  chartRegistry.ratingBrand = new Chart(document.getElementById('chartRatingBrand'), {
+    type:'bar',
+    data:{ labels:brandAvg.map(b=>b.brand), datasets:[{ data:brandAvg.map(b=>b.val), backgroundColor: brandAvg.map(b=> b.val>=4.2? '#11A672' : b.val>=4.0 ? '#2E9FE0' : '#E8A23B'), borderRadius:7, maxBarThickness:24 }]},
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      scales:{ x:{...baseScaleOpts(), min:0, max:5, title:{display:true,text:'Avg Rating', color:textColor()}}, y:{...baseScaleOpts(), grid:{display:false}} },
+      plugins:{ legend:{display:false}, tooltip:{...tooltipBase, callbacks:{label:c=>`${fmt2(c.raw)} ★ average`}} }
+    }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 10. PRICE vs RATING (bubble) ---------- */
+try {
+(() => {
+  chartRegistry.priceRating = new Chart(document.getElementById('chartPriceRating'), {
+    type:'bubble',
+    data:{ datasets:[{
+      label:'SKUs',
+      data: ratedProducts.map(p => ({ x:p.price, y:p.rating, r: Math.max(6, p.price100/3.2), brand:p.brand, product:p.product })),
+      backgroundColor:'#2E9FE0B3', borderColor:'#2E9FE0', borderWidth:1.5
+    }]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{ x:{...baseScaleOpts(), title:{display:true,text:'Selling Price (₹)', color:textColor()}}, y:{...baseScaleOpts(), min:3, max:4.5, title:{display:true,text:'Rating', color:textColor()}} },
+      plugins:{ legend:{display:false}, tooltip:{...tooltipBase, callbacks:{label:c=>`${c.raw.brand} — ${c.raw.product}: ₹${c.raw.x}, ${c.raw.y}★`}} }
+    }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 11. PLATFORM COVERAGE ---------- */
+try {
+(() => {
+  chartRegistry.platformCoverage = new Chart(document.getElementById('chartPlatformCoverage'), {
+    type:'bar',
+    data:{ labels:platformCoverage.map(p=>p.label), datasets:[{ data:platformCoverage.map(p=>p.pct), backgroundColor:['#11A672','#2E9FE0','#E8A23B','#D5635A'], borderRadius:8, maxBarThickness:50 }]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{ x:{...baseScaleOpts(), grid:{display:false}}, y:{...baseScaleOpts(), max:100, title:{display:true,text:'% of SKUs listed', color:textColor()}} },
+      plugins:{ legend:{display:false}, tooltip:{...tooltipBase, callbacks:{label:c=>`${c.raw}% (${platformCoverage[c.dataIndex].count}/${totalProducts} SKUs)`}} }
+    }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- HEATMAP TABLE ---------- */
+try {
+(() => {
+  const table = document.getElementById('heatmapTable');
+  let html = '<thead><tr><th>Brand</th><th>Blinkit</th><th>Zepto</th><th>Amazon</th><th>Official</th></tr></thead><tbody>';
+  brands.forEach(b => {
+    const items = PRODUCTS.filter(p=>p.brand===b);
+    const has = key => items.some(p=>p[key]);
+    html += `<tr><td>${b}</td>${platforms.map(k => `<td><span class="hm-dot ${has(k)?'hm-yes':'hm-no'}">${has(k)?'✓':'—'}</span></td>`).join('')}</tr>`;
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 13. BRAND RADAR ---------- */
+try {
+(() => {
+  const candidateBrands = ['Mother Dairy','Amul','Epigamia','Nescafé',"Cavin's",'Heritage'];
+  const brandStats = candidateBrands.map(b => {
+    const items = PRODUCTS.filter(p=>p.brand===b);
+    const rated = items.filter(p=>p.rating!==null);
+    return {
+      brand:b,
+      price: avg(items.map(p=>p.price)),
+      rating: rated.length ? avg(rated.map(p=>p.rating)) : 0,
+      protein: avg(items.map(p=>p.protein)),
+      calories: avg(items.map(p=>p.calories))
+    };
+  });
+  const allBrandStats = brands.map(b => {
+    const items = PRODUCTS.filter(p=>p.brand===b);
+    const rated = items.filter(p=>p.rating!==null);
+    return { price: avg(items.map(p=>p.price)), rating: rated.length?avg(rated.map(p=>p.rating)):0, protein: avg(items.map(p=>p.protein)), calories: avg(items.map(p=>p.calories)) };
+  });
+  const minMax = key => [Math.min(...allBrandStats.map(s=>s[key])), Math.max(...allBrandStats.map(s=>s[key]))];
+  const [pMin,pMax] = minMax('price'), [rMin,rMax] = minMax('rating'), [prMin,prMax] = minMax('protein'), [cMin,cMax] = minMax('calories');
+  const norm = (v,min,max,invert) => { let s = max===min ? 50 : ((v-min)/(max-min))*100; return invert ? 100-s : s; };
+
+  const radarColors = ['#0A1F3D','#2E9FE0','#11A672','#E8A23B','#D5635A','#828FA0'];
+  const datasets = brandStats.map((s,i) => ({
+    label: s.brand,
+    data: [ norm(s.price,pMin,pMax,true), norm(s.rating,rMin,rMax,false), norm(s.protein,prMin,prMax,false), norm(s.calories,cMin,cMax,true) ],
+    borderColor: radarColors[i], backgroundColor: radarColors[i]+'22', borderWidth:2, pointBackgroundColor: radarColors[i], pointRadius:3
+  }));
+  chartRegistry.brandRadar = new Chart(document.getElementById('chartBrandRadar'), {
+    type:'radar',
+    data:{ labels:['Price Value','Rating','Protein','Calorie Efficiency'], datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{ r:{ min:0, max:100, grid:{color:gridColor()}, angleLines:{color:gridColor()}, pointLabels:{color:textColor(), font:{size:12,weight:600}}, ticks:{display:false, backdropColor:'transparent'} } },
+      plugins:{ legend:{position:'bottom', labels:{color:textColor(), usePointStyle:true, boxWidth:8}}, tooltip:tooltipBase }
+    }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 14. SKUs PER BRAND ---------- */
+try {
+(() => {
+  const counts = brands.map(b => ({ brand:b, n: PRODUCTS.filter(p=>p.brand===b).length })).sort((a,b)=>b.n-a.n);
+  chartRegistry.skuPerBrand = new Chart(document.getElementById('chartSkuPerBrand'), {
+    type:'bar',
+    data:{ labels:counts.map(c=>c.brand), datasets:[{ data:counts.map(c=>c.n), backgroundColor:'#2E9FE0', borderRadius:7, maxBarThickness:24 }]},
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      scales:{ x:{...baseScaleOpts(), grid:{display:false}, ticks:{...baseScaleOpts().ticks, stepSize:1}}, y:{...baseScaleOpts(), grid:{display:false}} },
+      plugins:{ legend:{display:false}, tooltip:{...tooltipBase, callbacks:{label:c=>`${c.raw} SKU${c.raw>1?'s':''}`}} }
+    }
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+
+/* ---------- 15. OPPORTUNITY IMPACT vs EFFORT SCATTER ---------- */
+try {
+(() => {
+  const quads = Object.values(matrixData);
+  const datasets = quads.map(q => ({
+    label: q.label,
+    data: q.items.map(it => ({ x:it.x, y:it.y, t:it.t })),
+    backgroundColor: q.color, borderColor:'#fff', borderWidth:2, pointRadius:9, pointHoverRadius:12
+  }));
+  chartRegistry.opportunityScatter = new Chart(document.getElementById('chartOpportunityScatter'), {
+    type:'scatter',
+    data:{ datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        x:{...baseScaleOpts(), min:0, max:100, title:{display:true,text:'Effort to Implement →', color:textColor()}, ticks:{...baseScaleOpts().ticks, display:false}},
+        y:{...baseScaleOpts(), min:0, max:100, title:{display:true,text:'Market Impact →', color:textColor()}, ticks:{...baseScaleOpts().ticks, display:false}}
+      },
+      plugins:{
+        legend:{position:'bottom', labels:{color:textColor(), usePointStyle:true, boxWidth:8}},
+        tooltip:{...tooltipBase, callbacks:{label:c=>c.raw.t}}
+      }
+    },
+    plugins: [{
+      id:'quadrantLines',
+      beforeDraw(chart){
+        const {ctx, chartArea:{left,right,top,bottom}, scales:{x,y}} = chart;
+        ctx.save();
+        ctx.strokeStyle = gridColor();
+        ctx.setLineDash([4,4]);
+        ctx.beginPath(); ctx.moveTo(x.getPixelForValue(50), top); ctx.lineTo(x.getPixelForValue(50), bottom); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(left, y.getPixelForValue(50)); ctx.lineTo(right, y.getPixelForValue(50)); ctx.stroke();
+        ctx.restore();
+      }
+    }]
+  });
+})();
+} catch(e) { console.error("Dashboard section failed:", e); }
+}
+(function waitForChart(tries){
+  if (typeof Chart !== 'undefined'){ runCharts(); return; }
+  if (tries > 100){ console.error('Chart.js failed to load after retries — charts unavailable.'); return; }
+  setTimeout(() => waitForChart(tries+1), 100);
+})(0);
+
+</script>
+</body>
+</html>
